@@ -1,0 +1,2 @@
+The authentication module verifies user credentials.
+It validates JWT access tokens before allowing users to access protected resources.

@@ -1,0 +1,2 @@
+The database module stores user information.
+It supports creating, retrieving, updating, and deleting user records.

@@ -1,0 +1,1 @@
+RAG also know as retrieval augmented generation and it is used to extract information from the larget set of data provided.

@@ -1,0 +1,2 @@
+The payment module processes financial transactions.
+It tracks payment status and handles failed transactions using retries.
