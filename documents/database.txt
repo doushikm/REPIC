@@ -1,2 +1,8 @@
-The database module stores user information.
-It supports creating, retrieving, updating, and deleting user records.
+The database module stores user information using PostgreSQL.
+It supports creating, retrieving, updating, and deleting user records. Each user record contains an id, name, email, hashed password, and created_at timestamp.
+
+The module uses SQLAlchemy as its ORM. Database connections are managed through a connection pool with a maximum of 20 connections, so the app does not open a new connection for every request.
+
+Schema changes are handled with Alembic migrations. Every change to a table must have a migration file so that all developers and the production server stay in sync.
+
+Frequently requested data, such as user profiles, is cached in Redis for 10 minutes to reduce database load.

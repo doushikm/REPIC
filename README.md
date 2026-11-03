@@ -1,39 +1,20 @@
+# RepoMind: Ask Questions About a GitHub Repo (RAG)
 
-# REPIC
+Ask questions about a codebase in plain English and get answers
+with source file references. *(Work in progress)*
 
-Repository Exploration and Program Intelligence Copilot.
+**How it works:** Load files → Chunk → Embed (MiniLM) → Store (ChromaDB) → Retrieve → LLM answers
 
-REPIC is a RAG-based assistant designed to retrieve relevant information from documents and source code.
+**Stack:** Python, LangChain, ChromaDB, Ollama
 
-## Current Features
-
-- Load text documents from a directory
-- Generate embeddings using Sentence Transformers
-- Store embeddings in Chroma
-- Retrieve relevant documents using similarity search
-- Display source metadata for retrieved documents
-
-## Tech Stack
-
-- Python
-- LangChain
-- Sentence Transformers
-- Chroma
-
-## Current Version
-
-v1.0.0 — Basic document retrieval
-
-## Setup
-
-Install the required packages:
-
+**Run it:**
 ```bash
 pip install -r requirements.txt
+python rag.py
 ```
 
-Run the project:
+**What I learned so far**
+- Smaller chunks give closer matches but can crowd results with one file
+- MMR search helps diversify results
 
-```bash
-python main.py
-```
+See [experiments](docs/experiments.md) for details.

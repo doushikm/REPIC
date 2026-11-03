@@ -1,39 +1,58 @@
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
-from langchain_core.documents import Document
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# 1. Load all .txt files from the documents folder
+CHUNK_SIZE = 100
+CHUNK_OVERLAP = 20
+K = 3
+
+
 loader = DirectoryLoader(
     "documents/",
     glob="*.txt",
-    loader_cls=TextLoader
+    loader_cls=TextLoader,
+    loader_kwargs={"encoding": "utf-8"},
 )
-
 documents = loader.load()
-
 print(f"Loaded {len(documents)} documents")
 
-for document in documents:
-    print(document.metadata["source"])
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=CHUNK_SIZE,
+    chunk_overlap=CHUNK_OVERLAP,
+)
+chunks = splitter.split_documents(documents)
+print(f"Made {len(chunks)} chunks")
 
-# 2. Load the embedding model
 embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
-# 3. Convert documents into embeddings and store them
 vector_store = Chroma.from_documents(
-    documents=documents,
-    embedding=embeddings
+    documents=chunks,
+    embedding=embeddings,
 )
 
-# 4. Ask a question
-question = "where is user information stored?"
+questions = [
+    "where is user information stored?",
+    "how long does the access token last?",
+    "what happens when a payment fails?",
+    "how do refunds work?",
+    "why does RAG reduce hallucination?",
+    "how are passwords protected?",
+]
 
-# 5. Retrieve the most relevant document
-results = vector_store.similarity_search(question, k=1)
+for q in questions:
+    print("=" * 60)
+    print("Q:", q)
 
-# 6. Display the result
-for result in results:
-    print(result.page_content)
+    print("\n  Normal search:")
+    normal = vector_store.similarity_search_with_score(q, k=K)
+    for doc, score in normal:
+        print("   ", round(score, 3), "|", doc.metadata["source"])
+
+    print("\n  MMR search:")
+    mmr = vector_store.max_marginal_relevance_search(q, k=K, fetch_k=10)
+    for doc in mmr:
+        print("   ", doc.metadata["source"])
+    print()

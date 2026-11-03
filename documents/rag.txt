@@ -1,1 +1,7 @@
-RAG also know as retrieval augmented generation and it is used to extract information from the larget set of data provided.
+RAG stands for Retrieval Augmented Generation. It is a technique that lets a language model answer questions using information from your own documents.
+
+The process has two stages. In retrieval, documents are split into chunks, converted into embeddings, and stored in a vector database. When a question arrives, the most similar chunks are found. In generation, those chunks are given to a language model along with the question, so it can write an answer based on real data.
+
+RAG reduces hallucination because the model answers from retrieved text instead of guessing from memory. It also lets you use private or recent data without retraining the model.
+
+Chunk size is an important setting. Chunks that are too small lose context, and chunks that are too large make retrieval vague.

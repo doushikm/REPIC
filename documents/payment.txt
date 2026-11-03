@@ -1,2 +1,8 @@
-The payment module processes financial transactions.
-It tracks payment status and handles failed transactions using retries.
+The payment module handles all billing and transactions using the Stripe API.
+When a user buys a subscription, the module creates a Stripe checkout session and redirects the user to a secure payment page. Card details never touch our servers.
+
+After payment, Stripe sends a webhook event to the /webhooks/stripe endpoint. The module verifies the webhook signature, then marks the user's subscription as active in the database.
+
+Refunds can be issued within 14 days of purchase. The module calls the Stripe refund endpoint and records the refund in the transactions table.
+
+If a payment fails, the user gets an email and the subscription is paused after 3 days.

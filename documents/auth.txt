@@ -1,2 +1,8 @@
-The authentication module verifies user credentials.
-It validates JWT access tokens before allowing users to access protected resources.
+The authentication module verifies user credentials when someone logs in.
+It checks the submitted email and password against the hashed password stored in the database. Passwords are never stored in plain text. They are hashed using bcrypt before saving.
+
+After a successful login, the module generates a JWT access token that expires in 30 minutes. A longer-lived refresh token is also issued, which lasts 7 days.
+
+Every protected route validates the JWT access token before allowing access. If the token is missing, expired, or has an invalid signature, the request is rejected with a 401 Unauthorized error.
+
+Failed login attempts are counted. After 5 failed attempts, the account is locked for 15 minutes to prevent brute force attacks.
