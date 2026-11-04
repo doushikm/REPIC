@@ -2,8 +2,9 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_ollama import ChatOllama 
 
-CHUNK_SIZE = 100
+CHUNK_SIZE = 300
 CHUNK_OVERLAP = 20
 K = 3
 
@@ -33,6 +34,31 @@ vector_store = Chroma.from_documents(
     embedding=embeddings,
 )
 
+# 5. LLM
+llm = ChatOllama(model="llama3.2:3b", temperature=0)
+
+def ask(question, k=3):
+    # RETRIEVE: find the best chunks
+    docs = vector_store.similarity_search(question, k=k)
+
+    # AUGMENT: paste the chunks into a prompt
+    context = "\n\n".join(doc.page_content for doc in docs)
+    prompt = f"""Answer the question using ONLY the context below.
+If the answer is not in the context, say "I don't know based on the documents."
+
+Context:
+{context}
+
+Question: {question}
+
+Answer:"""
+
+    # GENERATE: the LLM writes the answer
+    answer = llm.invoke(prompt).content
+
+    sources = sorted({doc.metadata["source"] for doc in docs})
+    return answer, sources
+
 questions = [
     "where is user information stored?",
     "how long does the access token last?",
@@ -43,16 +69,8 @@ questions = [
 ]
 
 for q in questions:
+    answer, sources = ask(q)
     print("=" * 60)
     print("Q:", q)
-
-    print("\n  Normal search:")
-    normal = vector_store.similarity_search_with_score(q, k=K)
-    for doc, score in normal:
-        print("   ", round(score, 3), "|", doc.metadata["source"])
-
-    print("\n  MMR search:")
-    mmr = vector_store.max_marginal_relevance_search(q, k=K, fetch_k=10)
-    for doc in mmr:
-        print("   ", doc.metadata["source"])
-    print()
+    print("A:", answer)
+    print("Sources:", sources)
