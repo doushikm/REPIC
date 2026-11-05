@@ -2,7 +2,7 @@ import os
 import subprocess
 from langchain_core.documents import Document
 
-SKIP_NAMES = {"package-lock.json", "yarn.lock", "LICENSE", "NOTICE"}
+SKIP_NAMES = {"package-lock.json", "yarn.lock", "LICENSE", "NOTICE","HISTORY.md"}
 SKIP_EXT = {".key", ".cnf", ".csr", ".pem", ".crt", ".srl", ".typed"}
 
 def load_repo(repo_path, max_bytes=100_000):

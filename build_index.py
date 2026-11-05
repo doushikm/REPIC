@@ -1,8 +1,8 @@
 import shutil
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from loader import load_repo
+from chunker import chunk_document   # tree-sitter chunker
 
 REPO_PATH = "requests"
 DB_PATH = "chroma_db"
@@ -10,8 +10,9 @@ DB_PATH = "chroma_db"
 documents = load_repo(REPO_PATH)
 print(f"Loaded {len(documents)} files")
 
-splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-chunks = splitter.split_documents(documents)
+chunks = []
+for doc in documents:
+    chunks.extend(chunk_document(doc))
 print(f"Made {len(chunks)} chunks")
 
 embeddings = HuggingFaceEmbeddings(

@@ -1,0 +1,23 @@
+[
+  {"question": "how does requests handle redirects?", "expected": ["src/requests/sessions.py"]},
+  {"question": "where is the Session class defined?", "expected": ["src/requests/sessions.py"]},
+  {"question": "how does basic authentication work?", "expected": ["src/requests/auth.py"]},
+  {"question": "what exceptions can requests raise?", "expected": ["src/requests/exceptions.py"]},
+  {"question": "how are cookies handled?", "expected": ["src/requests/cookies.py"]},
+  {"question": "what does raise_for_status do?", "expected": ["src/requests/models.py"]},
+  {"question": "how does max_retries work in the HTTP adapter?", "expected": ["src/requests/adapters.py"]},
+  {"question": "what is CaseInsensitiveDict used for?", "expected": ["src/requests/structures.py"]},
+  {"question": "how are response hooks dispatched?", "expected": ["src/requests/hooks.py"]},
+  {"question": "where are status code names like ok and not_found defined?", "expected": ["src/requests/status_codes.py"]},
+
+  {"question": "how does it avoid sending credentials to a different host after a redirect?", "expected": ["src/requests/sessions.py"], "must_contain": "def rebuild_auth"},
+  {"question": "what does prepend_scheme_if_needed do?", "expected": ["src/requests/utils.py"], "must_contain": "def prepend_scheme_if_needed"},
+  {"question": "how are .netrc credentials looked up?", "expected": ["src/requests/utils.py"], "must_contain": "def get_netrc_auth"},
+  {"question": "how does digest authentication build its header?", "expected": ["src/requests/auth.py"], "must_contain": "def build_digest_header"},
+  {"question": "how are session settings merged with per-request settings?", "expected": ["src/requests/sessions.py"], "must_contain": "def merge_setting"},
+  {"question": "how does iter_content stream a response?", "expected": ["src/requests/models.py"], "must_contain": "def iter_content"},
+  {"question": "how are proxies chosen for a URL?", "expected": ["src/requests/utils.py"], "must_contain": "def select_proxy"},
+  {"question": "how is the response encoding guessed from headers?", "expected": ["src/requests/utils.py"], "must_contain": "def get_encoding_from_headers"},
+  {"question": "how does a hook function get called?", "expected": ["src/requests/hooks.py"], "must_contain": "def dispatch_hook"},
+  {"question": "how is a dict turned into a cookie jar?", "expected": ["src/requests/cookies.py"], "must_contain": "def cookiejar_from_dict"}
+]
